@@ -1,0 +1,114 @@
+.hero{
+    width: 100vw;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.3)) , url('../assets/BackgroundImage.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+main {
+  width: 100%;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding-bottom: 15vh;
+}
+
+section h3 {
+  /* padding-top: 90px; */
+  font-size: 35px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-shadow: 1px 1px 2px black;
+  color: #d7b8f6
+}
+
+section{
+  padding-top: 30vh;
+}
+section h1 {
+  margin: 30px 0 20px 0;
+  font-size: 55px;
+  font-weight: 700;
+  text-shadow: 2px 1px 5px black;
+  text-transform: uppercase;
+}
+
+section p {
+  font-size: 25px;
+  word-spacing: 2px;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 1px black;
+  font-weight: 400;
+  color: white;
+}
+
+.abc{
+    font-size: 25px;
+    word-spacing: 2px;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 1px black;
+    font-weight: 400;
+    color: #d0b5eb;
+}
+
+section a {
+  padding: 12px 30px;
+  border-radius: 4px;
+  outline: none;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: all 0.5s ease;
+}
+
+ section .btntwo {
+  background: #8c29ef;
+  color: #a561e9;
+  animation-timing-function: ease-in-out;
+  font-weight: bold;
+}
+
+ .btntwo:hover {
+  background: white;
+  color: #8c29ef;
+}
+section .btntwo {
+  background: #8c29ef;
+  color: white;
+  transition: all 0.5s ease-in-out;
+}
+
+
+.change_content:after {
+  content: "";
+  animation: changetext 10s infinite linear;
+  color: #8c29ef;
+} 
+
+@keyframes changetext {
+  0% {
+    content: "Historical Places";
+  }
+  20% {
+    content: "Museums";
+  }
+  35% {
+    content: "Parks";
+  }
+  60% {
+    content: "Art & Culture";
+  }
+  80% {
+    content: "Temples";
+  }
+  100% {
+    content: "And Many More";
+  }
+}
