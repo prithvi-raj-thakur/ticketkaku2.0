@@ -23,9 +23,9 @@ const navigate = useNavigate()
             <li><Link onClick={()=>{scrollTo(0, 0); }} to="/">About Us</Link></li>
             <li><Link onClick={()=>{scrollTo(0, 0);}} to="/help">Help</Link></li>
             {
-              !user? (<SignUpButton mode='modal'><li><button onClick={openSignIn} className='btn'>LOGIN</button></li></SignUpButton>):
+              !user? (<SignUpButton><li><button onClick={openSignIn} className='btn'>LOGIN</button></li></SignUpButton>):
               (
-                 <UserButton afterSignOutUrl='/'>
+                 <UserButton>
            <UserButton.MenuItems>
             
              
