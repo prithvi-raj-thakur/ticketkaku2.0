@@ -49,7 +49,7 @@ export const museumData = [
     location: "Salt Lake, Kolkata",
     description: "An amusement park known as the Disneyland of Bengal with rides and water park.",
     longDescription: "Nicco Park, affectionately known as the 'Disneyland of Bengal,' has been a cornerstone of entertainment and amusement in Kolkata for decades. Established in 1991, it was created not just for recreation but also with an educational purpose, aiming to provide 'edutainment' by incorporating scientific principles into its ride designs. This sprawling amusement park is located in the Salt Lake City area and offers a wide array of attractions for all age groups, making it a perfect destination for family outings and thrill-seekers alike. The park is home to over 35 different rides, ranging from gentle, family-friendly attractions like the Toy Train, Merry-Go-Round, and Paddle Boats to high-octane thrill rides such as the Cyclone roller coaster, the Water Chute, and the Flying Saucer. Each ride's operational mechanics are explained on accompanying plaques, subtly educating visitors about the underlying scientific concepts. A major extension of the park is 'Wet-O-Wild,' its dedicated water park, which features a variety of water slides, a wave pool, and splash zones, providing a much-needed respite during the hot summer months. Nicco Park also boasts other attractions like a 4D movie theatre, a bowling alley, and a haunted house called the 'River Cave Ride.' The park is beautifully landscaped with gardens and a large lake where visitors can enjoy boating. With its commitment to safety, regular introduction of new rides, and a vibrant atmosphere filled with fun and excitement, Nicco Park remains one of Eastern India's most beloved and enduring amusement destinations.",
-    price: ["300 INR (Entry + Rides)"],
+    price: ["500 INR (Entry + Rides)","1200 INR(Entry+Rides+Water park)"],
     openingTime: "10:30 AM",
     closingTime: "7:30 PM",
     dayoff: "Open All Days",
@@ -309,6 +309,8 @@ export const museumData = [
     category: "Museum"
   }
 ];
+
+
 
 
 

@@ -1,0 +1,82 @@
+.carousel-container {
+  width: 90%; /* covers ~90% of screen */
+  margin: 0 auto;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.carousel-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+/* Card styling */
+.carousel-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s, filter 0.2s;
+  max-width: 500px;
+  margin: auto;
+}
+
+.carousel-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.carousel-card h3 {
+  margin: 15px 0 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.carousel-card p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.slick-center .carousel-card {
+  transform: scale(1.05); /* highlight main card */
+  filter: blur(0); /* clear center */
+}
+
+.slick-slide .carousel-card {
+             /* blur side cards */
+  transform: scale(0.9); /* shrink side */
+}
+
+/* Arrows */
+.slick-prev:before,
+.slick-next:before {
+  color: #6c5ce7;
+  font-size: 28px;
+}
+
+
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.show-more-btn {
+  background: #6c5ce7;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.show-more-btn:hover {
+  background: #4834d4;
+  transform: scale(1.05);
+}

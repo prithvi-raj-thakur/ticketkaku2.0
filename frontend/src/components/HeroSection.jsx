@@ -25,7 +25,9 @@ const HeroSection = () => {
             <button className='btn'>KNOW MORE ➙</button>
  </section>
         </main>
-      
+      <button className="floating-btn" onClick={() => alert("Button clicked!")}>
+          BOOK NOW
+        </button>
     </div>
   )
 
