@@ -1,41 +1,33 @@
-import logo from './logo.svg';
-import victoria from "./victoria.jpg";
-import ScienceCity from "./science-city.jpg";
-import eco from "./ecoPark.jpg";
-import nicco from "./NiccoPark.jpg";
-import birla from "./birla.jpg";
-import hwh from "./hwhBridge.jpg";
-import indMuseum from "./indMuseum.jpg";
-import library from "./national-library.jpg";
-import stPaul from "./stPaul.jpg";
-import alipore from "./alipore.jpg";
-import bitm from "./bitm.jpg";
-import nehru from "./nehruMuseum.jpg";
-import rabindraBharti from "./rabindraMuseum.jpg";
-import shibpur from "./shibpur.jpg";
-import marble from "./marblePalace.jpg";
-import townHall from "./townHall.jpg";
-import metcalfe from "./metcalfe.jpg";
-import thakurBari from "./thakurBari.jpg";
-import shaheed from "./shaheedMinar.jpg";
-import netaji from "./netajiBhavan.jpg";
-import motherWax from "./motherWax.jpg";
-import rabindraSarovar from "./rabindraSarovar.jpg";
-import millennium from "./millenniumPark.jpg";
-import aquatica from "./aquatica.jpg";
-import tram from "./tram.jpg";
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
+import os
+import google.generativeai as genai
 
-import mohor from "./mohor.jpg";
+# ---------------------- CONFIG ---------------------- #
+# Load environment variables
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Initialize Gemini model
+model = genai.GenerativeModel("gemini-2.0-flash")
+
+# Upload folder path
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Flask app
+app = Flask(__name__)
+CORS(app, resources={
+     r"/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}})
 
 
+# ---------------------- PROMPTS ---------------------- #
+booking_prompt = """
+You are a friendly and helpful chatbot assistant for the Calcutta Transport Corporation (CTC). 
+You also act as a Kolkata tourist guide.
 
-export const assets = {
-    logo,
-};
 
-export const museumData = [
-  {
-    id: "1",
     name: "Victoria Memorial",
     location: "Maidan, Kolkata",
     description: "A large marble building dedicated to Queen Victoria, now a museum and tourist destination.",
@@ -44,11 +36,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Monday",
-    image : victoria,
     category: "Historical Place"
-  },
-  {
-    id: "2",
+
     name: "Science City",
     location: "EM Bypass, Kolkata",
     description: "India's largest science centre offering interactive exhibits, a space theatre, and science park.",
@@ -57,11 +46,8 @@ export const museumData = [
     openingTime: "9:00 AM",
     closingTime: "8:00 PM",
     dayoff: "Open All Days",
-    image:ScienceCity,
     category: "Museum"
-  },
-  {
-    id: "3",
+  
     name: "Eco Park",
     location: "New Town, Kolkata",
     description: "An urban park with themed gardens, boating, cycling, and recreational zones.",
@@ -70,25 +56,21 @@ export const museumData = [
     openingTime: "2:30 PM",
     closingTime: "8:30 PM",
     dayoff: "Monday",
-    image:eco,
     category: "Park"
-  },
-  {
-    id: "4",
+ 
     name: "Nicco Park",
     location: "Salt Lake, Kolkata",
     description: "An amusement park known as the Disneyland of Bengal with rides and water park.",
     longDescription: "Nicco Park, affectionately known as the 'Disneyland of Bengal,' has been a cornerstone of entertainment and amusement in Kolkata for decades. Established in 1991, it was created not just for recreation but also with an educational purpose, aiming to provide 'edutainment' by incorporating scientific principles into its ride designs. This sprawling amusement park is located in the Salt Lake City area and offers a wide array of attractions for all age groups, making it a perfect destination for family outings and thrill-seekers alike. The park is home to over 35 different rides, ranging from gentle, family-friendly attractions like the Toy Train, Merry-Go-Round, and Paddle Boats to high-octane thrill rides such as the Cyclone roller coaster, the Water Chute, and the Flying Saucer. Each ride's operational mechanics are explained on accompanying plaques, subtly educating visitors about the underlying scientific concepts. A major extension of the park is 'Wet-O-Wild,' its dedicated water park, which features a variety of water slides, a wave pool, and splash zones, providing a much-needed respite during the hot summer months. Nicco Park also boasts other attractions like a 4D movie theatre, a bowling alley, and a haunted house called the 'River Cave Ride.' The park is beautifully landscaped with gardens and a large lake where visitors can enjoy boating. With its commitment to safety, regular introduction of new rides, and a vibrant atmosphere filled with fun and excitement, Nicco Park remains one of Eastern India's most beloved and enduring amusement destinations.",
-    price: ["500 INR (Entry + Rides)","1200 INR(Entry+Rides+Water park)"],
+    price:Entry Fee: ₹500 per person
+    Includes entry plus access to 15 specified rides and attractions, such as Family Carousel, Vortex, Mirror Maze, Crazy Tea Party, Toy Train, MIG-21, Pirate Ship, Water Merry Go Round, Caterpillar, Flume Ride at Children's Corner, Moon Racker, Paddle Boat, Octopus, and Eiffel Tower. 
+    Parks’ Package: ₹1,200 per person
+    Grants access to all rides & attractions in both the Amusement Park and Water Park (Wet-O-Wild). Bull & Games are not included in this package. 
     openingTime: "10:30 AM",
     closingTime: "7:30 PM",
     dayoff: "Open All Days",
-    image:nicco,
     category: "Park"
-  },
 
-  {
-    id: "5",
     name: "Birla Planetarium",
     location: "Maidan, Kolkata",
     description: "Asia’s largest planetarium offering astronomy shows in multiple languages.",
@@ -97,11 +79,8 @@ export const museumData = [
     openingTime: "12:00 PM",
     closingTime: "7:00 PM",
     dayoff: "Open All Days",
-    image:birla,
     category: "Museum"
-  },
-  {
-    id: "6",
+ 
     name: "Howrah Bridge",
     location: "Howrah, Kolkata",
     description: "Iconic cantilever bridge over the Hooghly River, one of Kolkata’s landmarks.",
@@ -110,11 +89,8 @@ export const museumData = [
     openingTime: "Open 24 Hours",
     closingTime: "Open 24 Hours",
     dayoff: "Open All Days",
-    image:hwh,
     category: "Historical Place"
-  },
-  {
-    id: "7",
+  
     name: "Indian Museum",
     location: "Chowringhee, Kolkata",
     description: "The largest and oldest museum in India, featuring art, archaeology, and natural history collections.",
@@ -123,11 +99,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Monday",
-    image:indMuseum,
     category: "Museum"
-  },
-  {
-    id: "8",
+  
     name: "Kolkata Library (National Library)",
     location: "Belvedere Estate, Alipore, Kolkata",
     description: "India’s largest library by volume, serving as a repository of books and periodicals.",
@@ -136,11 +109,8 @@ export const museumData = [
     openingTime: "9:00 AM",
     closingTime: "8:00 PM",
     dayoff: "Sunday",
-    image:library,
     category: "Museum"
-  },
-  {
-    id: "9",
+  
     name: "St. Paul’s Cathedral",
     location: "Maidan, Kolkata",
     description: "A Gothic Revival Anglican cathedral and one of the city’s architectural landmarks.",
@@ -149,11 +119,8 @@ export const museumData = [
     openingTime: "9:00 AM",
     closingTime: "6:00 PM",
     dayoff: "Open All Days",
-    image:stPaul,
     category: "Historical Place"
-  },
-  {
-    id: "10",
+ 
     name: "Alipore Zoo",
     location: "Alipore, Kolkata",
     description: "India’s oldest zoological park, home to tigers, elephants, and a variety of fauna.",
@@ -162,11 +129,9 @@ export const museumData = [
     openingTime: "9:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Thursday",
-    image:alipore,
     category: "Park"
-  },
-  {
-    id: "11",
+ 
+    
     name: "Birla Industrial and Technological Museum",
     location: "Gurusahai Dutta Rd, Kolkata",
     description: "Interactive science and technology museum, part of the National Council of Science Museums.",
@@ -175,11 +140,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "6:00 PM",
     dayoff: "Monday",
-    image:bitm,
     category: "Museum"
-  },
-  {
-    id: "12",
+  
     name: "Nehru Children Museum",
     location: "Maidan, Kolkata",
     description: "A museum dedicated to children featuring dolls, toys, and epics like Ramayana & Mahabharata.",
@@ -188,11 +150,8 @@ export const museumData = [
     openingTime: "11:00 AM",
     closingTime: "7:00 PM",
     dayoff: "Monday",
-    image:nehru,
     category: "Museum"
-  },
-  {
-    id: "13",
+  
     name: "Rabindra Bharati Museum (Jorasanko Thakur Bari)",
     location: "Jorasanko, Kolkata",
     description: "The ancestral home of Rabindranath Tagore, now a museum on his life and works.",
@@ -201,11 +160,8 @@ export const museumData = [
     openingTime: "10:30 AM",
     closingTime: "5:00 PM",
     dayoff: "Monday",
-    image:rabindraBharti,
     category: "Museum"
-  },
-  {
-    id: "14",
+  
     name: "Shibpur Botanical Garden (Acharya Jagadish Chandra Bose Botanical Garden)",
     location: "Shibpur, Howrah (Kolkata)",
     description: "One of India’s oldest botanical gardens, home to the famous Great Banyan Tree.",
@@ -214,11 +170,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Monday",
-    image:shibpur,
     category: "Park"
-  },
-  {
-    id: "15",
+  
     name: "Marble Palace",
     location: "Machuabazar, Kolkata",
     description: "A 19th-century mansion with a collection of Western sculptures, paintings, and antiques.",
@@ -227,11 +180,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "4:00 PM",
     dayoff: "Monday & Thursday",
-    image:marble,
     category: "Historical Place"
-  },
-  {
-    id: "16",
+ 
     name: "Town Hall",
     location: "Esplanade, Kolkata",
     description: "A historical building used for cultural events, exhibitions, and gatherings.",
@@ -240,11 +190,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Sunday",
-    image:townHall,
     category: "Historical Place"
-  },
-  {
-    id: "17",
+
     name: "Metcalfe Hall",
     location: "Esplanade, Kolkata",
     description: "A neoclassical heritage building housing exhibitions by the ASI and cultural institutions.",
@@ -253,11 +200,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "5:00 PM",
     dayoff: "Sunday",
-    image:metcalfe,
     category: "Historical Place"
-  },
-  {
-    id: "18",
+  
     name: "Jorasanko Thakur Bari",
     location: "Jorasanko, Kolkata",
     description: "The ancestral home of Rabindranath Tagore, now a museum dedicated to his life and works.",
@@ -266,11 +210,9 @@ export const museumData = [
     openingTime: "10:30 AM",
     closingTime: "5:00 PM",
     dayoff: "Monday",
-    image:thakurBari,
     category: "Museum"
-  },
-  {
-    id: "19",
+  
+    
     name: "Shaheed Minar",
     location: "Esplanade, Kolkata",
     description: "Also known as Ochterlony Monument, built in 1828, now a memorial to Indian independence martyrs.",
@@ -279,11 +221,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "6:00 PM",
     dayoff: "Sunday",
-    image:shaheed,
     category: "Historical Place"
-  },
-  {
-    id: "20",
+  
     name: "Netaji Bhawan",
     location: "Elgin Road, Kolkata",
     description: "Residence of Netaji Subhash Chandra Bose, now preserved as a museum with his memorabilia.",
@@ -292,11 +231,8 @@ export const museumData = [
     openingTime: "11:00 AM",
     closingTime: "4:30 PM",
     dayoff: "Monday",
-    image:netaji,
     category: "Museum"
-  },
-  {
-    id: "21",
+  
     name: "Mother’s Wax Museum",
     location: "New Town, Kolkata",
     description: "A modern wax museum featuring statues of famous personalities of India and abroad.",
@@ -305,11 +241,8 @@ export const museumData = [
     openingTime: "12:00 PM",
     closingTime: "7:30 PM",
     dayoff: "Monday",
-    image:motherWax,
     category: "Museum"
-  },
-  {
-    id: "22",
+
     name: "Rabindra Sarobar Lake",
     location: "Southern Avenue, Kolkata",
     description: "A large artificial lake surrounded by gardens and walking trails, a popular relaxation spot.",
@@ -318,11 +251,8 @@ export const museumData = [
     openingTime: "5:00 AM",
     closingTime: "8:00 PM",
     dayoff: "Open All Days",
-    image:rabindraSarovar,
     category: "Park"
-  },
-  {
-    id: "23",
+
     name: "Millennium Park",
     location: "Strand Road, Hooghly Riverside, Kolkata",
     description: "A landscaped park along the river Hooghly with gardens, fountains, and family recreation areas.",
@@ -331,11 +261,8 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "6:00 PM",
     dayoff: "Open All Days",
-    image:millennium,
     category: "Park"
-  },
-  {
-    id: "24",
+
     name: "Aquatica Water Park",
     location: "Kestopur, Kolkata",
     description: "A popular water theme park with pools, slides, and adventure rides.",
@@ -344,137 +271,132 @@ export const museumData = [
     openingTime: "10:00 AM",
     closingTime: "6:00 PM",
     dayoff: "Open All Days",
-    image:aquatica,
     category: "Park"
-  },
-  {
-    id: "25",
-    name: "Mohor Kunja",
-    location: "Cathedral Road, Maidan, Kolkata",
-    description: "A serene urban park known for its lush gardens, musical fountains, and open-air stage for cultural events.",
-    longDescription: "Mohor Kunja, formerly known as Citizen's Park, is a beautiful and tranquil public park located in the heart of Kolkata, adjacent to the iconic Victoria Memorial and opposite the Nandan cultural complex. This green oasis offers a peaceful escape from the bustling city life. In 2007, the park was renamed 'Mohor Kunja' in a heartfelt tribute to the legendary Rabindra Sangeet vocalist, Smt. Kanika Bandopadhyay, who was affectionately known as 'Mohor Di.' The park is meticulously maintained, featuring sprawling lawns, vibrant flowerbeds, and well-paved walkways, making it a favorite spot for morning and evening walkers, joggers, and families. A major attraction at Mohor Kunja is its spectacular musical and laser fountain, one of the first of its kind in eastern India, which creates a mesmerizing display of water, light, and sound in the evenings. The park also boasts an open-air amphitheater that frequently hosts a variety of cultural programs, including music concerts, dance performances, and theatrical events, adding to the city's rich cultural fabric. With its serene ambiance, aesthetic beauty, and strategic location, Mohor Kunja serves as a vital recreational and cultural hub for the citizens of Kolkata and a delightful spot for tourists.",
+  
+    name: "National Library",
+    location: "Belvedere Estate, Alipore, Kolkata",
+    description: "India’s largest library by volume with over 2.2 million books, historic and academic resources.",
+    longDescription: "The National Library of India, situated on the scenic 30-acre Belvedere Estate in Alipore, Kolkata, is the nation's largest library in terms of volume and public record. It is an institution of national importance, mandated to collect, disseminate, and preserve the country's printed and intellectual heritage. The library's history is deeply rooted in India's colonial past, originally formed by merging the Imperial Library with the Calcutta Public Library. The magnificent main building, Belvedere House, once served as the residence for the Lieutenant Governor of Bengal, adding a layer of historical grandeur to its academic purpose. The library's collection is truly colossal, comprising over 2.2 million books, alongside vast numbers of journals, manuscripts, maps, and government publications in virtually every Indian language and many international languages. As a repository library, it receives a copy of every book, newspaper, and periodical published in India, making it an unparalleled resource for researchers, scholars, and avid readers. The sprawling campus with its lush green lawns and majestic trees provides a serene and scholarly atmosphere. The library complex includes multiple reading rooms, including a dedicated section for rare books and manuscripts. In its commitment to modernization, the National Library has undertaken significant digitization efforts to preserve its invaluable collection and enhance accessibility for a global audience. It stands as a custodian of the nation's literary wealth, a quiet and dignified testament to the enduring power of knowledge and learning.",
     price: ["Free Entry"],
-    openingTime: "5:00 AM",
-    closingTime: "9:00 PM",
-    dayoff: "Open All Days",
-    image:mohor,
-    category: "Park"
-  },
-  {
-  "id": "26",
-  "name": "Smaranika Tram Museum",
-  "location": "Esplanade, Maidan, Kolkata",
-  "description": "A unique museum housed in a refurbished vintage 1938 tram, showcasing the history and evolution of the iconic Kolkata tramways.",
-  "longDescription": "The Smaranika Tram Museum offers a nostalgic journey into the heritage of Kolkata's iconic public transport system. Housed inside a beautifully restored vintage tram car from 1938, stationed at the Esplanade tram depot, this unique museum is a tribute to Asia's oldest operating electric tramway. The air-conditioned interior of the tram is divided into two sections, featuring a charming cafeteria in one part and the museum gallery in the other. Visitors can explore a fascinating collection of memorabilia, including old tram tickets, tokens, conductors' caps, badges, and rare photographs that chronicle the tram's evolution from its horse-drawn origins to its electric present. The walls are adorned with informational posters and historical trivia, while miniature tram models showcase the different designs used over the decades. It's a compact yet richly detailed museum that captures the essence of a bygone era and the enduring legacy of the 'Calcutta Tramways,' making it a must-visit for history buffs, transport enthusiasts, and anyone looking for a uniquely Kolkatan experience.",
-  "price": ["10 per person"],
-  "openingTime": "1:00 PM",
-  "closingTime": "8:00 PM",
-  "dayoff": "Thursday",
-  image: tram,
-  "category": "Museum"
-}
+    openingTime: "9:00 AM",
+    closingTime: "8:00 PM",
+    dayoff: "Sunday",
+    category: "Museum"      
 
-];
+Book tickets for these places and provide the ticket fares.
+- Provide information about local attractions, events, and places of interest.
+Instructions for AI:
+- Use plain text only (no HTML or Markdown).  
+- When a user asks about any of the above places, provide ticket fares and a short description.  
+- If asked, also guide users on how to reach these places using CTC buses.  
+- Ask follow-up questions like:  
+  - "Do you want me to suggest other attractions nearby?"  
+  - "Would you like me to show you the bus routes and timings?" 
 
+You will help users with:
+- Booking tickets for tourist attractions
+- Providing information about bus fares and schedules
+- if someone uploads a picture 
+- Booking tickets for famous places and sharing ticket fares
+- Never ask users for their name, email, or phone number
+- Providing information about local attractions, events, and places of interest
+- after confirming helping with payment, provide a confirmation message with booking details
+- 
+Use only plain text. Do NOT use HTML or Markdown.
+Use line breaks to separate paragraphs.
+Use hyphens (-) for bullet points. 
 
+You will help users with:
+- Booking tickets for tourist attractions
+- Providing information about bus fares and schedules but not booking bus tickets
+- Booking tickets for attractions
+- Providing tourist info
+- After booking, confirm with booking details
 
+Use plain text only. No HTML/Markdown.
+"""
 
+help_prompt = """
+You are a polite and informative Help Desk assistant for Calcutta Transport Corporation (CTC).
+You answer questions about:
+- Lost & found
+- Customer support
+- Complaints & feedback
+- General transport info
 
+Use plain text only. No HTML/Markdown.
+"""
 
- export const feedbacks = [
-  {
-    name: "Elon Musk",
-    img: "/images/elon-musk.jpg",
-    text: "TicketKaku's use of AI to simplify ticket bookings is truly futuristic. The chatbot understands natural language, works across multiple languages, and delivers real-time results. This is what smart city infrastructure should look like — efficient, intelligent, and people-friendly.",
-    rating: "★★★★☆",
-    date: "Reviewed on 02/08/2025"
-  },
-  {
-    name: "Bill Gates",
-    img: "/images/bill-gates.jpg",
-    text: "I’ve always believed in technology that empowers communities, and TicketKaku is doing just that. By providing seamless access to cultural and educational venues through a clean interface and multilingual support, they’re setting a benchmark for digital inclusion in public services",
-    rating: "★★★★☆",
-    date: "Reviewed on 05/08/2025"
-  },
-  {
-    name: "Mahendra Singh Dhoni",
-    img: "/images/msd.jpg",
-    text: "Whether it’s on the field or planning a weekend with family, timing matters. With TicketKaku, booking tickets is quick, simple, and super reliable — no last-minute drama. It’s the kind of calm-under-pressure system I appreciate. Great job!",
-    rating: "★★★★★",
-    date: "Reviewed on 07/08/2025"
-  },
-  {
-    name: "Salman Khan",
-    img: "/images/salman-khan.jpg",
-    text: "What I liked about TicketKaku is how easy it makes the whole ticket booking process. No stress, no complicated steps — just a few taps and you're done. The chatbot even speaks Hindi! It's stylish, simple, and straight to the point — just like me.",
-    rating: "★★★★★",
-    date: "Reviewed on 12/08/2025"
-  },
-  {
-    name: "Dr. Sabyasachi Bagchi",
-    img: "/images/hod.jpg",
-    text: "As an academic, I often organize student visits to museums and cultural sites. TicketKaku has made this process unbelievably smooth. The multilingual interface is perfect for students from diverse backgrounds, and the AI chatbot handles queries with precision. Highly recommended for institutional use.",
-    rating: "★★★★★",
-    date: "Reviewed on 15/08/2025"
-  },
-  {
-    name: "Priyanka Chopra",
-    img: "/images/priyanka-chopra.jpg",
-    text: "TicketKaku makes exploring culture easier and smarter. I love that it supports multiple languages and uses AI to simplify bookings. It’s modern, inclusive, and exactly what today’s travelers need.",
-    rating: "★★★★★",
-    date: "Reviewed on 21/08/2025"
-  }
-];
+# Start chat sessions
+booking_chat = model.start_chat(
+    history=[{"role": "user", "parts": [booking_prompt]}])
+help_chat = model.start_chat(
+    history=[{"role": "user", "parts": [help_prompt]}])
 
 
+# ---------------------- ROUTES ---------------------- #
+@app.route("/chat", methods=["POST"])
+def unified_chat():
+    """Default chat route (used by React). Uses booking bot."""
+    try:
+        data = request.get_json()
+        user_input = data.get("message", "").strip()
+        if not user_input:
+            return jsonify({"error": "Message is empty"}), 400
 
-   export const faqs = [
-    {
-      question: "What is Ticketkaku?",
-      answer: "TicketKaku is an AI-powered assistant that helps users book tickets for popular parks, museums, and tourist attractions across Kolkata. It provides a seamless experience through simple chat-based interaction—no need to fill out long forms!"
-    },
-    {
-      question: "How do I book a ticket through the chatbot?",
-      answer: "Just start a chat and type your desired destination by clicking on Book Now. The chatbot will guide you to choose the date, number of visitors, ticket type, and payment method. After successful payment, your digital ticket will be generated instantly."
-    },
-    {
-      question: "Which places can I book tickets for?",
-      answer: "You can book tickets for major attractions such as Eco Park, Science City, Nicco Park, Victoria Memorial, Indian Museum, Birla Planetarium, Alipore Zoo, and many more."
-    },
-    {
-      question: "Do I need to sign up or log in to book tickets?",
-      answer: "Yes, users need to sign up or log in using their email or phone number to make bookings. This ensures that your tickets and booking history are securely stored and easily accessible at any time."
-    },
-    {
-      question: "Can I make payment through UPI or credit/debit cards?",
-      answer: "Absolutely! Our chatbot supports secure payment methods including UPI (Paytm, Google Pay, PhonePe), credit/debit cards, and net banking. All transactions are encrypted and processed through trusted payment gateways."
-    },
-    {
-      question: "Will I receive a digital ticket or QR code?",
-      answer: "Yes, after booking you will receive a digital ticket containing a QR code. This will be emailed to you and can also be accessed in your “My Bookings” section. You’ll just need to show the QR code at the venue entrance."
-    },
-    {
-      question: "Can I book for multiple people in one transaction?",
-      answer: "Yes, you can book for multiple visitors at once. While chatting with the bot, you’ll be asked how many adult, child, or senior citizen tickets you need—perfect for families and groups."
-    },
-    {
-      question: "How do I view or manage my previous bookings?",
-      answer: "Once logged in, you can go to the “My Bookings” section to view all your past and upcoming bookings. You can also download tickets or check your visit history from there."
-    },
-    {
-      question: "Can I cancel or reschedule a booking after payment?",
-      answer: "Yes, cancellations and rescheduling are allowed based on the venue's policy. Just type “Cancel booking” or “Reschedule” in the chatbot, and follow the instructions. Refunds (if applicable) are processed automatically within a few business days."
-    },
-    {
-      question: "Is the chatbot available 24/7 for support and booking?",
-      answer: "The Ticketkaku Chatbot is available 24/7 to help with bookings, payments, cancellations, and general inquiries. You can access it anytime from your phone, tablet, or desktop."
-    },
-    {
-      question: "What happens if my payment fails but money is deducted?",
-      answer: "In such cases, your money is safe. Most failed transactions are automatically refunded by your bank within 5–7 working days. If not, you can raise a support request directly in the chatbot."
-    },
-    {
-      question: "Is there a mobile app, or is it web-based only?",
-      answer: "Currently, TicketKaku works through a web-based platform. However, we’re working on a mobile app to make the experience even smoother and more accessible on the go."
-    }
-  ];
+        # Default: use booking bot
+        response = booking_chat.send_message(user_input)
+        reply = response.text.strip() if response.text else "Sorry, I couldn’t understand that."
+
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/chatbot/booking", methods=["POST"])
+def booking_bot():
+    try:
+        data = request.get_json()
+        user_input = data.get("message", "").strip()
+        if not user_input:
+            return jsonify({"error": "Message is empty"}), 400
+
+        response = booking_chat.send_message(user_input)
+        reply = response.text.strip() if response.text else "Sorry, I couldn’t understand that."
+
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/chatbot/help", methods=["POST"])
+def help_bot():
+    try:
+        data = request.get_json()
+        user_input = data.get("message", "").strip()
+        if not user_input:
+            return jsonify({"error": "Message is empty"}), 400
+
+        response = help_chat.send_message(user_input)
+        reply = response.text.strip() if response.text else "Sorry, I couldn’t understand that."
+
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/upload", methods=["POST"])
+def upload_file():
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files["file"]
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+
+    return jsonify({"message": "File uploaded successfully", "path": filepath})
+
+
+# ---------------------- MAIN ---------------------- #
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)

@@ -4,9 +4,10 @@ import wbmapimage from '../assets/wb_map.jpg'
 
 const AboutUs = () => {
   return (
+    <div id="aboutus">
     <section className="about-section">
       <div className="about-header">
-        <h1>About Us</h1>
+        <h1 >About Us</h1>
         <p className="subheading">
           Discover TicketKaku – Your AI-powered ticket booking assistant in Kolkata
         </p>
@@ -41,6 +42,7 @@ const AboutUs = () => {
         </div>
       </div>
     </section>
+    </div>
   );
 };
 

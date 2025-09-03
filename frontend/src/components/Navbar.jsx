@@ -34,9 +34,9 @@ useEffect(() => {
       />
         <ul>
             <li> <Link onClick={()=>{scrollTo(0, 0)}} to="/">Home</Link></li>
-            <li><Link onClick={()=>{scrollTo(0, 0); }} to="/">Museums</Link></li>
+            <li><Link onClick={()=>{window.scrollTo(0,0); }} to="/#owl">Museums</Link></li>
             <li><Link onClick={()=>{scrollTo(0, 0);}} to="/my-bookings">My Bookings</Link></li>
-            <li><Link onClick={()=>{scrollTo(0, 0); }} to="/">About Us</Link></li>
+            <li><Link onClick={()=>{window.scrollTo(0, 0); }} to="/#aboutus">About Us</Link></li>
             <li><Link onClick={()=>{scrollTo(0, 0);}} to="/help">Help</Link></li>
             {
               !user? (<SignUpButton><li><button onClick={openSignIn} className='btn'>LOGIN</button></li></SignUpButton>):

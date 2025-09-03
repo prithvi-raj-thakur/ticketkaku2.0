@@ -1,7 +1,8 @@
-import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import '../css files/HeroSection.css'
 
 const HeroSection = () => {
+  const navigate = useNavigate();
  return (
     <div className='hero'>
         <main>
@@ -25,7 +26,7 @@ const HeroSection = () => {
             <button className='btn'>KNOW MORE ➙</button>
  </section>
         </main>
-      <button className="floating-btn" onClick={() => alert("Button clicked!")}>
+      <button className="floating-btn" onClick={() => navigate('/chatbot')}>
           BOOK NOW
         </button>
     </div>
